@@ -8,18 +8,18 @@ class SimCardsBloc {
   }
 
   final _simCardsProvider = new SimCardsProvider();
-  final _streamController = new StreamController<SimCard>();
-  Stream<SimCard> _onSimCardChanged;
-  List<SimCard> _simCards;
-  SimCard _selectedSimCard;
+  final _streamController = new StreamController<SimCard?>();
+  Stream<SimCard?>? _onSimCardChanged;
+  List<SimCard>? _simCards;
+  SimCard? _selectedSimCard;
 
-  Stream<SimCard> get onSimCardChanged => _onSimCardChanged;
+  Stream<SimCard?>? get onSimCardChanged => _onSimCardChanged;
 
-  SimCard get selectedSimCard => _selectedSimCard;
+  SimCard? get selectedSimCard => _selectedSimCard;
 
   void loadSimCards() async {
     _simCards = await _simCardsProvider.getSimCards();
-    _simCards.forEach((sim) {
+    _simCards!.forEach((sim) {
       if (sim.state == SimCardState.Ready) {
         this.selectSimCard(sim);
       }
@@ -35,18 +35,18 @@ class SimCardsBloc {
     _streamController.add(_selectedSimCard);
   }
 
-  SimCard _selectNextSimCard() {
+  SimCard? _selectNextSimCard() {
     if (_selectedSimCard == null) {
-      _selectedSimCard = _simCards[0];
+      _selectedSimCard = _simCards![0];
       return _selectedSimCard;
     }
 
-    for (var i = 0; i < _simCards.length; i++) {
-      if (_simCards[i].imei == _selectedSimCard.imei) {
-        if (i + 1 < _simCards.length) {
-          _selectedSimCard = _simCards[i + 1];
+    for (var i = 0; i < _simCards!.length; i++) {
+      if (_simCards![i].imei == _selectedSimCard!.imei) {
+        if (i + 1 < _simCards!.length) {
+          _selectedSimCard = _simCards![i + 1];
         } else {
-          _selectedSimCard = _simCards[0];
+          _selectedSimCard = _simCards![0];
         }
         break;
       }

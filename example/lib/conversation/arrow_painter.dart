@@ -3,12 +3,12 @@ import 'package:flutter/rendering.dart';
 enum ArrowDirection { Left, Right }
 
 class ArrowPainter extends CustomPainter {
-  final Color color;
-  final ArrowDirection direction;
+  final Color? color;
+  final ArrowDirection? direction;
   final _paint = new Paint();
 
   ArrowPainter({this.color, this.direction}) {
-    _paint.color = this.color;
+    _paint.color = this.color!;
   }
 
   @override

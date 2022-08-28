@@ -22,7 +22,7 @@ class ContactColor {
     return _colors;
   }
 
-  static Color getColor(String contactId) {
+  static Color getColor(String? contactId) {
     final int color = (contactId.hashCode % ContactColor.allColors.length);
     return ContactColor.allColors.elementAt(color);
   }

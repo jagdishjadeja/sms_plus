@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sms_maintained/contact.dart';
 import 'package:sms_maintained/sms.dart';
@@ -10,13 +11,13 @@ class FormSend extends StatelessWidget {
   FormSend(this.thread, {this.onMessageSent});
 
   final SmsThread thread;
-  final MessageSentCallback onMessageSent;
+  final MessageSentCallback? onMessageSent;
   final TextEditingController _textField = new TextEditingController();
   final SmsSender _sender = new SmsSender();
 
   @override
   Widget build(BuildContext context) {
-    final simCards = SimCardsBlocProvider.of(context);
+    final simCards = SimCardsBlocProvider.of(context)!;
     return new Material(
       elevation: 4.0,
       child: new Row(
@@ -35,29 +36,28 @@ class FormSend extends StatelessWidget {
             ),
           ),
           new IconButton(
-              icon: new StreamBuilder<SimCard>(
+              icon: new StreamBuilder<SimCard?>(
                   stream: simCards.onSimCardChanged,
                   initialData: simCards.selectedSimCard,
                   builder: (context, snapshot) {
                     return new Row(
                       children: [
-                        new Icon(
-                          Icons.sim_card,
-                          color: snapshot.data.state == SimCardState.Ready
-                              ? Colors.blue
-                              : Colors.grey
-                        ),
-                        new Text(snapshot.data.slot.toString(),
-                          style: new TextStyle(color: snapshot.data.state == SimCardState.Ready
-                              ? Colors.black
-                              : Colors.grey
-                          ),
+                        new Icon(Icons.sim_card,
+                            color: snapshot.data!.state == SimCardState.Ready
+                                ? Colors.blue
+                                : Colors.grey),
+                        new Text(
+                          snapshot.data!.slot.toString(),
+                          style: new TextStyle(
+                              color: snapshot.data!.state == SimCardState.Ready
+                                  ? Colors.black
+                                  : Colors.grey),
                         ),
                       ],
                     );
                   }),
               onPressed: () {
-                SimCardsBlocProvider.of(context).toggleSelectedSim();
+                SimCardsBlocProvider.of(context)!.toggleSelectedSim();
               }),
           new IconButton(
             icon: new Icon(Icons.send),
@@ -84,17 +84,19 @@ class FormSend extends StatelessWidget {
       }
     });
 
-    final simCard = SimCardsBlocProvider.of(context).selectedSimCard;
+    final simCard = SimCardsBlocProvider.of(context)!.selectedSimCard;
     await _sender.sendSms(message, simCard: simCard);
     _textField.clear();
-    onMessageSent(message);
+    onMessageSent!(message);
   }
 
   void _notifyDelivery(SmsMessage message, BuildContext context) async {
     final contacts = new ContactQuery();
-    Contact contact = await contacts.queryContact(message.address);
+    Contact contact =
+        await (contacts.queryContact(message.address) as FutureOr<Contact>);
     final snackBar = new SnackBar(
         content: new Text('Message to ${contact.fullName} delivered'));
-    Scaffold.of(context).showSnackBar(snackBar);
+    // Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

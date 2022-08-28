@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sms_maintained/contact.dart';
 import 'package:sms_maintained/sms.dart';
 import 'arrow_painter.dart';
@@ -12,7 +11,7 @@ class SentMessage extends Message {
             backgroundColor: Colors.lightBlue[100],
             arrowDirection: ArrowDirection.Right);
 
-  final UserProfile userProfile;
+  final UserProfile? userProfile;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class SentMessage extends Message {
                   child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      new Text(message.body.trim()),
+                      new Text(message.body!.trim()),
                       new Align(
                         child: new Padding(
                           padding: new EdgeInsets.only(top: 5.0),
@@ -43,14 +42,13 @@ class SentMessage extends Message {
                   margin: new EdgeInsets.only(left: 48.0),
                   padding: new EdgeInsets.all(10.0),
                   decoration: new BoxDecoration(
-                    borderRadius: new BorderRadius.circular(10.0),
-                    color: this.backgroundColor
-                  ),
+                      borderRadius: new BorderRadius.circular(10.0),
+                      color: this.backgroundColor),
                 ),
               ),
               new Container(
                 child:
-                    createAvatar(userProfile.thumbnail, userProfile.fullName),
+                    createAvatar(userProfile!.thumbnail, userProfile!.fullName),
                 margin: new EdgeInsets.only(left: 8.0, top: 8.0),
               ),
             ],

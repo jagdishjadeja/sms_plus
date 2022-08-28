@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sms_maintained/contact.dart';
 import 'package:sms_maintained/sms.dart';
 
@@ -13,8 +12,8 @@ abstract class Message extends StatelessWidget {
 
   final SmsMessage message;
   final bool compactMode;
-  final Color backgroundColor;
-  final ArrowDirection arrowDirection;
+  final Color? backgroundColor;
+  final ArrowDirection? arrowDirection;
 
   bool get sent =>
       message.kind == SmsMessageKind.Sent ||
@@ -23,10 +22,10 @@ abstract class Message extends StatelessWidget {
       message.state == SmsMessageState.Delivered;
 
   get time {
-    return new TimeOfDay(hour: message.date.hour, minute: message.date.minute);
+    return new TimeOfDay(hour: message.date!.hour, minute: message.date!.minute);
   }
 
-  createAvatar(Photo thumbnail, String alternativeText) {
+  createAvatar(Photo? thumbnail, String? alternativeText) {
     if (compactMode) {
       return new Container(width: 40.0);
     }

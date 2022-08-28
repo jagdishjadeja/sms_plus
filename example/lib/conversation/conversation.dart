@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:sms_maintained/contact.dart';
 import 'package:sms_maintained/sms.dart';
@@ -12,7 +11,7 @@ class Conversation extends StatefulWidget {
   Conversation(this.thread, this.userProfile) : super();
 
   final SmsThread thread;
-  final UserProfile userProfile;
+  final UserProfile? userProfile;
 
   @override
   State<Conversation> createState() => new _ConversationState();
@@ -23,7 +22,7 @@ class _ConversationState extends State<Conversation> {
 
   @override
   void initState() {
-    _receiver.onSmsReceived.listen((sms) {
+    _receiver.onSmsReceived!.listen((sms) {
       setState(() {});
     });
     super.initState();
@@ -35,8 +34,8 @@ class _ConversationState extends State<Conversation> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(
-            widget.thread.contact.fullName ?? widget.thread.contact.address),
-        backgroundColor: ContactColor.getColor(widget.thread.contact.fullName),
+            widget.thread.contact!.fullName ?? widget.thread.contact!.address!),
+        backgroundColor: ContactColor.getColor(widget.thread.contact!.fullName),
       ),
       body: new Column(
         children: <Widget>[

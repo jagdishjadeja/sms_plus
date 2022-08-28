@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sms_maintained/contact.dart';
 import 'package:sms_maintained/sms.dart';
@@ -12,20 +13,20 @@ class Threads extends StatefulWidget {
 
 class _ThreadsState extends State<Threads> with TickerProviderStateMixin {
   bool _loading = true;
-  List<SmsThread> _threads;
-  UserProfile _userProfile;
+  List<SmsThread>? _threads;
+  UserProfile? _userProfile;
   final SmsQuery _query = new SmsQuery();
   final SmsReceiver _receiver = new SmsReceiver();
   final UserProfileProvider _userProfileProvider = new UserProfileProvider();
   final SmsSender _smsSender = new SmsSender();
 
   // Animation
-  AnimationController opacityController;
+  late AnimationController opacityController;
 
   @override
   void initState() {
     super.initState();
-    _receiver.onSmsReceived.listen(_onSmsReceived);
+    _receiver.onSmsReceived!.listen(_onSmsReceived);
     _userProfileProvider.getUserProfile().then(_onUserProfileLoaded);
     _query.getAllThreads.then(_onThreadsLoaded);
     _smsSender.onSmsDelivered.listen(_onSmsDelivered);
@@ -58,30 +59,30 @@ class _ThreadsState extends State<Threads> with TickerProviderStateMixin {
       return new FadeTransition(
         opacity: opacityController,
         child: new ListView.builder(
-            itemCount: _threads.length,
+            itemCount: _threads!.length,
             itemBuilder: (context, index) {
-              return new Thread(_threads[index], _userProfile);
+              return new Thread(_threads![index], _userProfile);
             }),
       );
     }
   }
 
   void _onSmsReceived(SmsMessage sms) async {
-    var thread = _threads.singleWhere((thread) {
+    var thread = _threads!.singleWhere((thread) {
       return thread.id == sms.threadId;
     }, orElse: () {
       var thread = new SmsThread(sms.threadId);
-      _threads.insert(0, thread);
+      _threads!.insert(0, thread);
       return thread;
     });
 
     thread.addNewMessage(sms);
     await thread.findContact();
 
-    int index = _threads.indexOf(thread);
+    int index = _threads!.indexOf(thread);
     if (index != 0) {
-      _threads.removeAt(index);
-      _threads.insert(0, thread);
+      _threads!.removeAt(index);
+      _threads!.insert(0, thread);
     }
 
     setState(() {});
@@ -106,11 +107,12 @@ class _ThreadsState extends State<Threads> with TickerProviderStateMixin {
     }
   }
 
-  void _onSmsDelivered(SmsMessage sms) async {
+  void _onSmsDelivered(SmsMessage? sms) async {
     final contacts = new ContactQuery();
-    Contact contact = await contacts.queryContact(sms.address);
+    Contact contact =
+        await (contacts.queryContact(sms!.address) as FutureOr<Contact>);
     final snackBar = new SnackBar(
         content: new Text('Message to ${contact.fullName} delivered'));
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

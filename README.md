@@ -1,16 +1,14 @@
-# This project is **NOT** maintained anymore
+# This project is maintained 
 
-Took over from previous owner because [the old repo](https://github.com/babariviere/flutter_sms) isn't maintained.
+Took over from previous owner because [the old repo 1](https://github.com/babariviere/flutter_sms) isn't maintained.
+Took over from previous owner because [the old repo 2](https://github.com/geordyvc/flutter_sms) isn't maintained.
 
 ## Reason I took over
 
-I am making an SMS app (that will be open source when it is more stable) and I need a good package for all the CRUD actions that I need to do with my messages. 
+I was developing app that required sending sms from app
+above packages were not maintained and did not had supoprt for sound null safety
 
-## Reason I am letting go
-
-I wanted to maintain this flutter library since I was building my own sms application but life came in between. Sorry for not letting you know sooner. I hope someone will fork this and extend upon it, as I wanted to do.
-
-# Flutter SMS
+# sms_sns (sound null safety)
 
 This is an SMS library for Flutter.
 
@@ -37,7 +35,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  sms_maintained: ^0.2.5
+  sms_maintained: 
+    git:
+      url: https://github.com/jagdishjadeja/sms_sns.git
+      ref: main # branch name
 ...
 ```
 

@@ -37,7 +37,7 @@ dependencies:
 
   sms_maintained: 
     git:
-      url: https://github.com/jagdishjadeja/sms_sns.git
+      url: git@github.com:jagdishjadeja/sms_plus.git
       ref: main # branch name
 ...
 ```
